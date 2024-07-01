@@ -1,6 +1,3 @@
-import sys
-sys.stdin = open('input.txt', 'r')
-
 n,m,h,k = map(int, input().split())
 
 # 방향
