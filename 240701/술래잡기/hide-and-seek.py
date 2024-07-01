@@ -102,7 +102,7 @@ for rnd in range(k):
             px = px + dx[sd]
             py = py + dy[sd]
 
-    for i in rmv_idx[::-1]:
+    for i in sorted(rmv_idx)[::-1]:
         runner.pop(i)
 
     score += (rnd+1)*cnt
