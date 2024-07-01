@@ -1,3 +1,6 @@
+import sys
+sys.stdin = open('input.txt', 'r')
+
 n,m,h,k = map(int, input().split())
 
 # 방향
@@ -7,6 +10,7 @@ dy = [0,1,0,-1]
 # 술래
 sx = sy = int((n-1)/2)
 sd = 0
+delta = 1
 
 # 술래 reserved
 arr = [[-1 for _ in range(n)] for _ in range(n)]
@@ -59,29 +63,34 @@ for rnd in range(k):
         break
 
     # 도망자 이동
-    new_runner = []
-    for (rx,ry,rd) in runner:
+    new_runner = [x[:] for x in runner]
+    for i,(rx,ry,rd) in enumerate(runner):
         if distance(rx,ry,sx,sy) <= 3:
             nx = rx + dx[rd]
             ny = ry + dy[rd]
             if 0<=nx<n and 0<=ny<n: # 격자 내
                 if (nx,ny)!=(sx,sy):
-                    new_runner.append((nx,ny,rd))
+                    new_runner[i] = (nx,ny,rd)
             else: # 격자 밖
                 nd = (rd+2)%4
-                nx = rx + dx[rd]
-                ny = ry + dy[rd]
+                nx = rx + dx[nd]
+                ny = ry + dy[nd]
                 if (nx, ny) != (sx, sy):
-                    new_runner.append((nx, ny, rd))
+                    new_runner[i] = (nx,ny,nd)
 
     runner = new_runner
 
     # 술래 이동
     sx = sx + dx[sd]
     sy = sy + dy[sd]
-
-    if (sx,sy) in reserved:
-        sd = (sd+1)%4
+    if (sx,sy) == (0,0):
+        delta = -1
+        sd = 2
+    elif (sx,sy) == (int((n-1)/2),int((n-1)/2)):
+        delta = 1
+        sd = 0
+    elif (sx,sy) in reserved:
+        sd = (sd+delta)%4
 
     # 술래 잡기
     px,py = sx,sy
