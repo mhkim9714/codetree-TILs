@@ -1,6 +1,3 @@
-import sys
-sys.stdin = open('input.txt', 'r')
-
 n = int(input())
 M = int(n/2)
 arr = []
