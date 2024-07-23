@@ -82,7 +82,7 @@ for _ in range(m):
             if 0<=ni<n and 0<=nj<n and arr[ni][nj]>0: # 칸 안 & 나무 있는 경우 -> 제초제O, 전파O
                 arr[ni][nj] = -1*(c+1)
                 continue
-            elif 0<=ni<n and 0<=nj<n and arr[ni][nj]<=0: # 칸 안 & 나무 없는 경우 -> 제초제O, 전파X
+            elif 0<=ni<n and 0<=nj<n and arr[ni][nj]<=0 and arr[ni][nj]>-100: # 칸 안 & 나무 없는 경우 -> 제초제O, 전파X
                 arr[ni][nj] = -1*(c+1)
                 break
             else: # 칸 밖
