@@ -22,10 +22,9 @@ def bfs(si,sj):
     q = []
     visited = [[-1 for _ in range(n)] for _ in range(n)]
     head, tail = [], []
-    cnt = 0
 
     q.append((si,sj))
-    visited[si][sj] = cnt
+    visited[si][sj] = 0
     if arr[si][sj] == 1:
         head = (si,sj)
     elif arr[si][sj] == 3:
@@ -33,7 +32,6 @@ def bfs(si,sj):
 
     while q:
         ci,cj = q.pop(0)
-        cnt += 1
         for di,dj in [(0,1),(0,-1),(1,0),(-1,0)]:
             ni,nj = ci+di,cj+dj
             if 0<=ni<n and 0<=nj<n and visited[ni][nj]==-1 and arr[ni][nj]>=1 and arr[ni][nj]<=3:
@@ -43,7 +41,7 @@ def bfs(si,sj):
                     tail = (ni, nj)
 
                 q.append((ni,nj))
-                visited[ni][nj] = cnt
+                visited[ni][nj] = visited[ci][cj]+1
 
     return head, tail, visited[head[0]][head[1]]+1
 
