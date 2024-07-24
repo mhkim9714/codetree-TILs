@@ -18,7 +18,7 @@ ddj = [1, 1, -1, -1]
 ans = 0
 for _ in range(m):
     # 탈출 조건
-    mx = max((max(x) for x in arr))
+    mx = max(max(x) for x in arr)
     if mx <= 0:
         break
 
@@ -56,9 +56,9 @@ for _ in range(m):
     arr = [x[:] for x in narr]
 
     # 제초제를 뿌릴 위치 선정
-    max = -1
-    max_i = -1
-    max_j = -1
+    mx = -1
+    mx_i = -1
+    mx_j = -1
     for i in range(n-1,-1,-1):
         for j in range(n-1,-1,-1):
             if arr[i][j]>0:
@@ -72,18 +72,18 @@ for _ in range(m):
                             continue
                         else:
                             break
-                if cnt >= max:
-                    max = cnt
-                    max_i = i
-                    max_j = j
+                if cnt >= mx:
+                    mx = cnt
+                    mx_i = i
+                    mx_j = j
 
     # 제초제 뿌리기 + ans 더하기
-    ans += max
-    arr[max_i][max_j] = -1*(c+1)
+    ans += mx
+    arr[mx_i][mx_j] = -1*(c+1)
     for a in range(4):
         for b in range(1,k+1):
-            ni = max_i+b*ddi[a]
-            nj = max_j+b*ddj[a]
+            ni = mx_i+b*ddi[a]
+            nj = mx_j+b*ddj[a]
             if 0<=ni<n and 0<=nj<n and arr[ni][nj]>0: # 칸 안 & 나무 있는 경우 -> 제초제O, 전파O
                 arr[ni][nj] = -1*(c+1)
                 continue
