@@ -44,7 +44,6 @@ def bfs(si,sj):
 
                 q.append((ni,nj))
                 visited[ni][nj] = cnt
-                break
 
     return head, tail, visited[head[0]][head[1]]+1
 
