@@ -24,11 +24,11 @@ def bfs(si,sj,ei,ej):
             if (ni,nj) == (ei,ej): # [레이저 공격]
                 power[ei][ej] = max(power[ei][ej]-power[si][sj], 0)
                 while True:
+                    if (ci,cj) == (si,sj):
+                        return True # 최단 경로를 찾은 경우 레이저 공격을 수행하고 True를 반환
                     power[ci][cj] = max(power[ci][cj]-(power[si][sj]//2), 0)
                     relk.add((ci, cj))
                     ci,cj = visited[ci][cj]
-                    if (ci,cj) == (si,sj):
-                        return True # 최단 경로를 찾은 경우 레이저 공격을 수행하고 True를 반환
 
             if len(visited[ni][nj]) == 0 and power[ni][nj] > 0:
                 q.append((ni, nj))
