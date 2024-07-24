@@ -1,3 +1,5 @@
+# 예외케이스: 1222222223 해서 4 없이 바로 다음 1과 이어지는 경우!!!!!!!!!!! ★★★★★ 이 경우가 계속 코너케이스로 있었던 거야!!!!!!!!!
+
 n,m,k = map(int, input().split())
 arr = []
 for _ in range(n):
@@ -35,13 +37,13 @@ def bfs(si,sj):
         for di,dj in [(0,1),(0,-1),(1,0),(-1,0)]:
             ni,nj = ci+di,cj+dj
             if 0<=ni<n and 0<=nj<n and visited[ni][nj]==-1 and arr[ni][nj]>=1 and arr[ni][nj]<=3:
+                visited[ni][nj] = visited[ci][cj] + 1
                 if arr[ni][nj] == 1:
                     head = (ni, nj)
                 elif arr[ni][nj] == 3:
                     tail = (ni, nj)
-
-                q.append((ni,nj))
-                visited[ni][nj] = visited[ci][cj]+1
+                else:
+                    q.append((ni,nj))
 
     return head, tail, visited[head[0]][head[1]]+1
 
@@ -59,7 +61,17 @@ for rnd in range(k):
                         break
                     elif 0<=ni<n and 0<=nj<n and arr[ni][nj]!=1:
                         narr[i][j] = 4
-            if arr[i][j] == 2:
+            elif arr[i][j] == 3:
+                lst = []
+                for (di, dj) in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                    ni, nj = i + di, j + dj
+                    if 0<=ni<n and 0<=nj<n:
+                        lst.append(arr[ni][nj])
+                if 4 in lst:
+                    narr[i][j] = 4
+                else:
+                    narr[i][j] = 1
+            elif arr[i][j] == 2:
                 for (di,dj) in [(0,1),(0,-1),(1,0),(-1,0)]:
                     ni,nj = i+di,j+dj
                     if 0<=ni<n and 0<=nj<n and arr[ni][nj]==3:
@@ -67,7 +79,7 @@ for rnd in range(k):
                         break
                     elif 0<=ni<n and 0<=nj<n and arr[ni][nj]!=3:
                         narr[i][j] = 2
-            elif arr[i][j] in [1,3]:
+            elif arr[i][j] == 1:
                 narr[i][j] = arr[i][j] + 1
     arr = narr
 
