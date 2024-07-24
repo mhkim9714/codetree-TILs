@@ -7,16 +7,16 @@ for _ in range(n):
 bdi = [0, -1, 0, 1]
 bdj = [1, 0, -1, 0]
 
-# 공 던져지는 순서 미리 정해놓기 (4n회) -> (0,i,bd) or (1,j,bd)
+# 공 던져지는 순서 미리 정해놓기 (4n회) -> (si,sj,방향)
 ball = []
 for i in range(n):
-    ball.append((0,i,0))
-for j in range(n):
-    ball.append((1,j,1))
+    ball.append((i,0,0))
+for i in range(n):
+    ball.append((n-1,i,1))
 for i in range(n-1,-1,-1):
-    ball.append((0,i,2))
-for j in range(n-1,-1,-1):
-    ball.append((1,j,3))
+    ball.append((i,n-1,2))
+for i in range(n-1,-1,-1):
+    ball.append((0,i,3))
 
 def bfs(si,sj):
     q = []
@@ -72,11 +72,7 @@ for rnd in range(k):
     arr = narr
 
     # 공 던져지는 축,좌표 결정
-    axis, idx, dir = ball[rnd%(4*n)]
-    if axis == 0: # 행축
-        si,sj = idx,0
-    else: # 열축
-        si,sj = 0,idx
+    si, sj, dir = ball[rnd%(4*n)]
 
     # 사람 맞추고 점수 & 머리 꼬리 체인지
     ci,cj = si,sj
