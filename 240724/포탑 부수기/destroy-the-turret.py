@@ -1,4 +1,5 @@
 # 최단 길이를 갖는 경로(path) 파악 ★★★★★
+
 N,M,K = map(int, input().split())
 
 # Grid 내의 각 위치마다 [공격력(0~5000; def input), 최근공격시점(0~K-1; def -1)
@@ -37,7 +38,8 @@ def bfs(si,sj,ei,ej):
     return False
 
 def bomb(si,sj,ei,ej):
-    power[ei][ej] -= power[si][sj]
+    power[ei][ej] = (power[ei][ej]-power[si][sj], 0)
+
     for (di,dj) in [(1,0),(-1,0),(0,1),(0,-1),(1,-1),(1,1),(-1,-1),(-1,1)]:
         ni,nj = (ei+di)%N,(ej+dj)%M
         if (ni,nj) != (si,sj) and power[ni][nj]>0:
@@ -65,7 +67,6 @@ for k in range(K):
         break
     elif len(attk_candidate) == 1: # 공격력으로 한명 추려진 상황
         attk_i, attk_j = attk_candidate[0]
-        power[attk_i][attk_j] += (N+M)
     else:
         temp = []
         for (i,j) in attk_candidate:
@@ -73,7 +74,6 @@ for k in range(K):
         sorted_temp = sorted(temp, key=lambda x: (x[0], x[1], x[2]), reverse=True) # 내림차순 정렬 (큰->작)
         attk_j = sorted_temp[0][-1]
         attk_i = sorted_temp[0][-2] - attk_j
-        power[attk_i][attk_j] += (N+M)
 
     time[attk_i][attk_j] = k # 공격 시점 업데이트
     relk.add((attk_i, attk_j))
@@ -106,6 +106,7 @@ for k in range(K):
     relk.add((tgt_i, tgt_j))
 
     # [공격]
+    power[attk_i][attk_j] += (N + M)
     if bfs(attk_i, attk_j, tgt_i, tgt_j) is False: # [포탄 공격]
         bomb(attk_i, attk_j, tgt_i, tgt_j)
 
