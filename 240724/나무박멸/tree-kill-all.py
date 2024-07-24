@@ -17,6 +17,11 @@ ddj = [1, 1, -1, -1]
 
 ans = 0
 for _ in range(m):
+    # 탈출 조건
+    mx = max((max(x) for x in arr))
+    if mx <= 0:
+        break
+
     # 성장: 동시에
     narr = [x[:] for x in arr]
     for i in range(n):
@@ -85,7 +90,7 @@ for _ in range(m):
             elif 0<=ni<n and 0<=nj<n and arr[ni][nj]<=0 and arr[ni][nj]>-100: # 칸 안 & 나무 없는 경우 -> 제초제O, 전파X
                 arr[ni][nj] = -1*(c+1)
                 break
-            else: # 칸 밖
+            else: # 칸 밖 & 벽인 경우
                 break
 
     # 음수 조정 (1년 has passed)
