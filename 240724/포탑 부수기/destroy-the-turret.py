@@ -38,14 +38,13 @@ def bfs(si,sj,ei,ej):
     return False
 
 def bomb(si,sj,ei,ej):
-    power[ei][ej] = (power[ei][ej]-power[si][sj], 0)
+    power[ei][ej] = max(power[ei][ej]-power[si][sj], 0)
 
     for (di,dj) in [(1,0),(-1,0),(0,1),(0,-1),(1,-1),(1,1),(-1,-1),(-1,1)]:
         ni,nj = (ei+di)%N,(ej+dj)%M
         if (ni,nj) != (si,sj) and power[ni][nj]>0:
             power[ni][nj] = max(power[ni][nj]-(power[si][sj]//2), 0)
             relk.add((ni, nj))
-
 
 for k in range(K):
     relk = set()
@@ -75,9 +74,6 @@ for k in range(K):
         attk_j = sorted_temp[0][-1]
         attk_i = sorted_temp[0][-2] - attk_j
 
-    time[attk_i][attk_j] = k # 공격 시점 업데이트
-    relk.add((attk_i, attk_j))
-
     # [공격대상 선정]: 공격력 높은 -> 가장 오래된 공격 포탑(time 작은) -> 행+열 작은 -> 열 작은 / 공격 포탑 제외
     tgt_pow, tgt_i, tgt_j = 0, -1, -1
     tgt_candidate = []
@@ -103,10 +99,12 @@ for k in range(K):
         tgt_j = sorted_temp[0][-1]
         tgt_i = sorted_temp[0][-2] - tgt_j
 
+    # [공격]
+    power[attk_i][attk_j] += (N + M) # 공격자 공격력 업그레이드
+    time[attk_i][attk_j] = k  # 공격 시점 업데이트
+    relk.add((attk_i, attk_j))
     relk.add((tgt_i, tgt_j))
 
-    # [공격]
-    power[attk_i][attk_j] += (N + M)
     if bfs(attk_i, attk_j, tgt_i, tgt_j) is False: # [포탄 공격]
         bomb(attk_i, attk_j, tgt_i, tgt_j)
 
