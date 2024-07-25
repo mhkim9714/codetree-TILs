@@ -14,15 +14,34 @@ for i in range(n):
             base.append((i,j))
 arr = [[0]*n for _ in range(n)]
 
-# 거리구하는 함수
+# 거리구하는 함수 (막힌 루트 고려해서 최소거리를 구해야함)
 def distance(si,sj,ei,ej):
-    return abs(si-ei)+abs(sj-ej)
+    q = []
+    visited = [[0]*n for _ in range(n)]
+
+    q.append((si,sj))
+    visited[si][sj] = 0
+
+    while q:
+        ci,cj = q.pop(0)
+        if (ci,cj) == (ei,ej):
+            break
+
+        for di,dj in ((-1,0),(0,-1),(0,1),(1,0)):
+            ni,nj = ci+di, cj+dj
+            if 0<=ni<n and 0<=nj<n and visited[ni][nj]==0 and arr[ni][nj]!=1:
+                q.append((ni,nj))
+                visited[ni][nj] = visited[ci][cj]+1
+
+    return visited[ei][ej]
+
 
 time = 0
 while True:
     if conv == people:
         break
 
+    block = []
     for i, (pi,pj) in enumerate(people):
         if (pi,pj) != (-1,-1): # 격자내 사람에 대해서만 추출한 [사람의 좌표]
             ci,cj = conv[i] # 할당된 [편의점의 좌표]
@@ -40,9 +59,9 @@ while True:
                     ppi,ppj = ni,nj
             people[i] = (ppi,ppj)
 
-            # [2] 할당된 편의점에 도착했다면 그 편의점 블로킹 진행
+            # [2] 할당된 편의점에 도착했다면 그 편의점 block list에 추가
             if (ppi,ppj) == (ci,cj):
-                arr[ppi][ppj] = 1
+                block.append((ci,cj))
 
     # [3] 사람들 베이스캠프에 할당
     if time < len(people):
@@ -55,7 +74,11 @@ while True:
 
         sorted_temp = sorted(temp, key=lambda x: (x[0], x[1], x[2])) # 작->큰
         people[time] = sorted_temp[0][1], sorted_temp[0][2]
-        arr[sorted_temp[0][1]][sorted_temp[0][2]] = 1 # 해당 베이스캠프 블로킹 진행
+        block.append((sorted_temp[0][1], sorted_temp[0][2]))
+
+    # [4] block 후보들 싹다 블로킹 진행
+    for i,j in block:
+        arr[i][j] = 1
 
     time += 1
 
