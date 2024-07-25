@@ -14,10 +14,10 @@ for i in range(n):
             base.append((i,j))
 arr = [[0]*n for _ in range(n)]
 
-# 거리구하는 함수 (막힌 루트 고려해서 최소거리를 구해야함) -> [★★★★★] 예외케이스: 베캠과 편의점이 연결되지 않을때는 0으로 반환됨
+# 거리구하는 함수 (막힌 루트 고려해서 최소거리를 구해야함) -> [★★★★★] 예외케이스: start와 end 좌표가 연결되지 않은 경우
 def distance(si,sj,ei,ej):
     q = []
-    visited = [[0]*n for _ in range(n)]
+    visited = [[-1]*n for _ in range(n)]
 
     q.append((si,sj))
     visited[si][sj] = 0
@@ -29,11 +29,11 @@ def distance(si,sj,ei,ej):
 
         for di,dj in ((-1,0),(0,-1),(0,1),(1,0)):
             ni,nj = ci+di, cj+dj
-            if 0<=ni<n and 0<=nj<n and visited[ni][nj]==0 and arr[ni][nj]!=1:
+            if 0<=ni<n and 0<=nj<n and visited[ni][nj]==-1 and arr[ni][nj]!=1:
                 q.append((ni,nj))
                 visited[ni][nj] = visited[ci][cj]+1
 
-    return visited[ei][ej]
+    return visited[ei][ej] # 연결되어 있으면 0 이상의 정수, 연결되지 않았다면 -1을 반환
 
 
 time = 0
@@ -50,13 +50,15 @@ while True:
                 continue
 
             # [1] 격자내 모든 사람 최단 거리 이동 to 할당된 편의점
-            min_d = 2*n
+            min_d = n*n
             ppi,ppj = pi,pj # [사람이 이동할 새로운 좌표]
             for di,dj in ((-1,0),(0,-1),(0,1),(1,0)):
                 ni,nj = pi+di,pj+dj
-                if 0<=ni<n and 0<=nj<n and arr[ni][nj]==0 and distance(ni,nj,ci,cj)<min_d:
-                    min_d = distance(ni,nj,ci,cj)
-                    ppi,ppj = ni,nj
+                if 0<=ni<n and 0<=nj<n and arr[ni][nj]==0: # 격자내, 이동할수 있는 좌표인 경우
+                    d = distance(ni,nj,ci,cj) # 편의점까지의 거리계산
+                    if d >= 0 and d < min_d: # 연결되어 있다면,
+                        min_d = d
+                        ppi,ppj = ni,nj
             people[i] = (ppi,ppj)
 
             # [2] 할당된 편의점에 도착했다면 그 편의점 block list에 추가
