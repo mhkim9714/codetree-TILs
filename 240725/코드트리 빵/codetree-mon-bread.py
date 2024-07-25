@@ -14,7 +14,7 @@ for i in range(n):
             base.append((i,j))
 arr = [[0]*n for _ in range(n)]
 
-# 거리구하는 함수 (막힌 루트 고려해서 최소거리를 구해야함)
+# 거리구하는 함수 (막힌 루트 고려해서 최소거리를 구해야함) -> [★★★★★] 예외케이스: 베캠과 편의점이 연결되지 않을때는 0으로 반환됨
 def distance(si,sj,ei,ej):
     q = []
     visited = [[0]*n for _ in range(n)]
@@ -74,7 +74,8 @@ while True:
         temp = []
         for bi,bj in base:
             if arr[bi][bj] == 0:
-                temp.append((distance(bi,bj,ci,cj),bi,bj))
+                if distance(bi,bj,ci,cj) > 0:
+                    temp.append((distance(bi,bj,ci,cj),bi,bj))
 
         sorted_temp = sorted(temp, key=lambda x: (x[0], x[1], x[2])) # 작->큰
         people[time] = sorted_temp[0][1], sorted_temp[0][2]
