@@ -63,7 +63,11 @@ while True:
             if (ppi,ppj) == (ci,cj):
                 block.append((ci,cj))
 
-    # [3] 사람들 베이스캠프에 할당
+    # [3] block 후보들 싹다 블로킹 진행
+    for i, j in block:
+        arr[i][j] = 1
+
+    # [4] 사람들 베이스캠프에 할당
     if time < len(people):
         ci,cj = conv[time] # 해당 time의 타겟 편의점 좌표
 
@@ -74,11 +78,7 @@ while True:
 
         sorted_temp = sorted(temp, key=lambda x: (x[0], x[1], x[2])) # 작->큰
         people[time] = sorted_temp[0][1], sorted_temp[0][2]
-        block.append((sorted_temp[0][1], sorted_temp[0][2]))
-
-    # [4] block 후보들 싹다 블로킹 진행
-    for i,j in block:
-        arr[i][j] = 1
+        arr[sorted_temp[0][1]][sorted_temp[0][2]] = 1
 
     time += 1
 
