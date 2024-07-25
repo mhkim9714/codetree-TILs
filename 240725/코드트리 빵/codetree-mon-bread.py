@@ -23,7 +23,7 @@ while True:
     if conv == people:
         break
 
-    block = []
+    conv_block = []
     for i, (pi,pj) in enumerate(people):
         if (pi,pj) != (-1,-1): # 격자내 사람에 대해서만 추출한 [사람의 좌표]
             ci,cj = conv[i] # 할당된 [편의점의 좌표]
@@ -41,9 +41,13 @@ while True:
                     ppi,ppj = ni,nj
             people[i] = (ppi,ppj)
 
-            # [2] 할당된 편의점에 도착했다면 그 편의점 block list에 추가
+            # [2] 할당된 편의점에 도착했다면 그 편의점 conv_block list에 추가
             if (ppi,ppj) == (ci,cj):
-                block.append((ci,cj))
+                conv_block.append((ci,cj))
+
+    # [2'] block 후보들 싹다 블로킹 진행
+    for i, j in conv_block:
+        arr[i][j] = 1
 
     # [3] 사람들 베이스캠프에 할당
     if time < len(people):
@@ -56,11 +60,7 @@ while True:
 
         sorted_temp = sorted(temp, key=lambda x: (x[0], x[1], x[2])) # 작->큰
         people[time] = sorted_temp[0][1], sorted_temp[0][2]
-        block.append((sorted_temp[0][1], sorted_temp[0][2]))
-
-    # [4] block 후보들 싹다 블로킹 진행
-    for i,j in block:
-        arr[i][j] = 1
+        arr[sorted_temp[0][1]][sorted_temp[0][2]] = 1
 
     time += 1
 
