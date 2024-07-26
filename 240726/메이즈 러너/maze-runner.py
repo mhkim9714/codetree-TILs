@@ -35,10 +35,6 @@ def square():
 
 ans = 0
 for _ in range(K):
-    # 탈출 조건: 모든 참가자가 exit을 통해 탈출했을때 종료
-    if len(participant) == 0:
-        break
-
     # 참가자 동시 이동
     new_participant = []
     for i, (ci,cj) in enumerate(participant):
@@ -55,6 +51,10 @@ for _ in range(K):
         else:
             new_participant.append((ci,cj))
     participant = new_participant
+
+    # 탈출 조건: 모든 참가자가 exit을 통해 탈출했을때 종료
+    if len(participant) == 0:
+        break
 
     # 미로 회전 (grid O, exit, 참가자 모두 처리)
     narr = [x[:] for x in arr]
