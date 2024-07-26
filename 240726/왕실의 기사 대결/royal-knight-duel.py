@@ -32,7 +32,6 @@ for _ in range(Q):
     i,d = map(int, input().split())
     command.append((i-1,d))
 
-
 def move_targets(i,d):
     q = []
     chunk = []
@@ -42,7 +41,6 @@ def move_targets(i,d):
 
     for item in knight[i][0]:
         q.append(item)
-        chunk.append(item)
 
     while q:
         ci,cj = q.pop(0)
@@ -51,6 +49,7 @@ def move_targets(i,d):
             if (ni,nj) in wall: # 벽인 경우 -> 이동 불가
                 return []
             elif arr[ni][nj] in unseen: # 다른 기사에 있는 경우 -> 다른 기사도 이동해줘야 함
+                q.append((ci,cj))
                 unseen.remove(arr[ni][nj])
                 for item in knight[arr[ni][nj]][0]:
                     q.append(item)
@@ -59,7 +58,7 @@ def move_targets(i,d):
         else: # grid 범위 밖인 경우 -> 이동 불가
             return []
 
-    return list(set(chunk))
+    return chunk
 
 
 
