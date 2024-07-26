@@ -65,6 +65,9 @@ def move_targets(i,d):
 
 # 본격 시작
 for i,d in command:
+    if len(knight) == 0:
+        break
+
     if i not in knight.keys(): # 이미 사라진 기사에게 명령을 하는 경우 무반응
         continue
 
@@ -97,6 +100,10 @@ for i,d in command:
 
         knight = new_knight
         arr = narr
+
+
+if len(knight) == 0:
+    print(0)
 
 ans = 0
 for item in knight.values():
