@@ -69,8 +69,10 @@ for _ in range(K):
             if (si+i,sj+j) == (exi,exj):
                 nexi,nexj = si+j,sj+l-i
             # 참가자 처리 (속하는 모든 참가자들에 대해 처리)
-            if (si+i,sj+j) in participant:
-                new_participant[participant.index((si+i,sj+j))] = (si+j,sj+l-i)
+            for idx, (ci,cj) in enumerate(participant):
+                if (si+i,sj+j) == (ci,cj):
+                    new_participant[idx] = (si+j,sj+l-i)
+
     arr = narr
     participant = new_participant
     exi,exj = nexi,nexj
