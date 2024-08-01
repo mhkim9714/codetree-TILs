@@ -2,12 +2,10 @@ import heapq
 
 INF = int(1e9)
 departure = 0
-dep_distance = []
 packages = dict() # [출발, 도착, cost, revenue]
 
-def dijkstra(start, n):
+def dijkstra(start):
     q = []
-    distance = [INF] * (n)
 
     heapq.heappush(q, (0,start)) # (cost,tgt_node)
     distance[start] = 0
@@ -22,7 +20,6 @@ def dijkstra(start, n):
                 distance[i[0]] = cost
                 heapq.heappush(q, (cost,i[0]))
 
-    return distance
 
 Q = int(input())
 for _ in range(Q):
@@ -44,37 +41,45 @@ for _ in range(Q):
                 if arr[i][j] < INF:
                     graph[i].append((j,arr[i][j]))
 
+        distance = [INF] * n
+        dijkstra(departure)
+
     elif command[0] == 200: # 여행 상품 생성
         p_id,revenue,dest = command[1:]
-        if len(dep_distance) == 0:
-            dep_distance = dijkstra(departure, n)
-        packages[p_id] = [departure, dest, dep_distance[dest], revenue]
+        packages[p_id] = [departure, dest, distance[dest], revenue]
 
     elif command[0] == 300: # 여행 상품 취소
         if command[1] in packages.keys():
             del packages[command[1]]
 
     elif command[0] == 400: # 최적의 여행 상품 판매
-        candidates = []
+        max_profit, max_profit_p_id = -1,-1
+
         for p_id, info in packages.items():
             if info[2] == INF or info[2] > info[3]: # 판매 불가 상품 조건
                 continue
-            else:
-                candidates.append((info[3]-info[2], p_id))
+            else: # 판매 가능한 상품
+                if max_profit < (info[3]-info[2]):
+                    max_profit, max_profit_p_id = (info[3]-info[2]), p_id
+                elif max_profit == (info[3]-info[2]):
+                    if max_profit_p_id > p_id:
+                        max_profit_p_id = p_id
 
-        if len(candidates) > 0:
-            sorted_candidates = sorted(candidates, key=lambda x:(x[0],-x[1]), reverse=True) # 큰->작
-            selected_p_id = sorted_candidates[0][1]
-            print(selected_p_id)
-            del packages[selected_p_id]
-        else:
+        if max_profit == -1:
             print(-1)
+        else:
+            print(max_profit_p_id)
+            del packages[max_profit_p_id]
 
     elif command[0] == 500: # 여행 상품의 출발지 변경
         departure = command[1]
-        dep_distance = dijkstra(departure, n)
+        distance = [INF] * n
+        dijkstra(departure)
+
         for p_id, info in packages.items():
-            packages[p_id] = [departure, info[1], dep_distance[info[1]], info[3]]
+            packages[p_id] = [departure, info[1], distance[info[1]], info[3]]
 
 
 # 시간 초과 잡기
+# 1) departure 갱신될때마다 다익스트라 한번만 돌려줌
+# 2) sorting operation 제거
