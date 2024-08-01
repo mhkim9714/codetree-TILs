@@ -1,3 +1,4 @@
+import sys
 import heapq
 
 INF = float('inf')
@@ -80,6 +81,8 @@ for _ in range(Q):
             if not isCancelled[p.id]:
                 print(p.id)
                 break
+        else:
+            print(-1)
 
     elif command[0] == 500: # 여행 상품의 출발지 변경
         departure = command[1]
@@ -96,4 +99,4 @@ for _ in range(Q):
 # 시간 초과 잡기
 # 1) departure 갱신될때마다 다익스트라 한번만 돌려줌
 # 2) sorting operation 제거
-# 3) packages도 dictionary 말고 heapq (우선순위 큐)으로 구현 -> answer 코드 참조
+# 3) packages도 dictionary 말고 heapq (우선순위 큐)으로 구현: 패키지 취소의 operation은 heapq에선 지원이 안되므로 isCancelled라는 True/False list를 따로 활용한다.
