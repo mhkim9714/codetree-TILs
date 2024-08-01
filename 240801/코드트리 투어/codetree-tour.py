@@ -1,8 +1,25 @@
 import heapq
 
-INF = int(1e9)
+INF = float('inf')
+MAX_ID = 30005
+isMade = [False] * MAX_ID
+isCancelled = [False] * MAX_ID
+
+n,m = 0,0
+distance = []
 departure = 0
-packages = dict() # [출발, 도착, cost, revenue]
+pq = []
+class Package:
+    def __init__(self, id, revenue, dest, profit):
+        self.id = id
+        self.revenue = revenue
+        self.dest = dest
+        self.profit = profit
+
+    def __lt__(self, other): # x<y를 판단하는 기준을 정의 (less than)
+        if self.profit == other.profit:
+            return self.id < other.id
+        return self.profit > other.profit
 
 def dijkstra(start):
     q = []
@@ -46,40 +63,37 @@ for _ in range(Q):
 
     elif command[0] == 200: # 여행 상품 생성
         p_id,revenue,dest = command[1:]
-        packages[p_id] = [departure, dest, distance[dest], revenue]
+        heapq.heappush(pq, Package(p_id,revenue,dest,revenue-distance[dest]))
+        isMade[p_id] = True
 
-    elif command[0] == 300: # 여행 상품 취소
-        if command[1] in packages.keys():
-            del packages[command[1]]
+    elif command[0] == 300: # 여행 상품 취소 (hq에서 특정 인덱스 값 빼기 어려우니까 cancelled 여부를 저장)
+        if isMade[command[1]]:
+            isCancelled[command[1]] = True
 
     elif command[0] == 400: # 최적의 여행 상품 판매
-        max_profit, max_profit_p_id = -1,-1
-
-        for p_id, info in packages.items():
-            if info[2] == INF or info[2] > info[3]: # 판매 불가 상품 조건
-                continue
-            else: # 판매 가능한 상품
-                if max_profit < (info[3]-info[2]):
-                    max_profit, max_profit_p_id = (info[3]-info[2]), p_id
-                elif max_profit == (info[3]-info[2]):
-                    if max_profit_p_id > p_id:
-                        max_profit_p_id = p_id
-
-        if max_profit == -1:
-            print(-1)
-        else:
-            print(max_profit_p_id)
-            del packages[max_profit_p_id]
+        while pq:
+            p = pq[0]
+            if p.profit < 0:
+                print(-1)
+                break
+            heapq.heappop(pq)
+            if not isCancelled[p.id]:
+                print(p.id)
+                break
 
     elif command[0] == 500: # 여행 상품의 출발지 변경
         departure = command[1]
         distance = [INF] * n
         dijkstra(departure)
 
-        for p_id, info in packages.items():
-            packages[p_id] = [departure, info[1], distance[info[1]], info[3]]
+        temp_packages = []
+        while pq:
+            temp_packages.append(heapq.heappop(pq))
+        for p in temp_packages:
+            heapq.heappush(pq, Package(p.id,p.revenue,p.dest,p.revenue-distance[p.dest]))
 
 
 # 시간 초과 잡기
 # 1) departure 갱신될때마다 다익스트라 한번만 돌려줌
 # 2) sorting operation 제거
+# 3) packages도 dictionary 말고 heapq (우선순위 큐)으로 구현 -> answer 코드 참조
