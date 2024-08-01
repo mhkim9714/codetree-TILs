@@ -2,6 +2,7 @@ import heapq
 
 INF = int(1e9)
 departure = 0
+dep_distance = []
 packages = dict() # [출발, 도착, cost, revenue]
 
 def dijkstra(start, n):
@@ -45,8 +46,9 @@ for _ in range(Q):
 
     elif command[0] == 200: # 여행 상품 생성
         p_id,revenue,dest = command[1:]
-        distance = dijkstra(departure, n)
-        packages[p_id] = [departure, dest, distance[dest], revenue]
+        if len(dep_distance) == 0:
+            dep_distance = dijkstra(departure, n)
+        packages[p_id] = [departure, dest, dep_distance[dest], revenue]
 
     elif command[0] == 300: # 여행 상품 취소
         if command[1] in packages.keys():
@@ -70,6 +72,9 @@ for _ in range(Q):
 
     elif command[0] == 500: # 여행 상품의 출발지 변경
         departure = command[1]
+        dep_distance = dijkstra(departure, n)
         for p_id, info in packages.items():
-            distance = dijkstra(departure, n)
-            packages[p_id] = [departure, info[1], distance[info[1]], info[3]]
+            packages[p_id] = [departure, info[1], dep_distance[info[1]], info[3]]
+
+
+# 시간 초과 잡기
