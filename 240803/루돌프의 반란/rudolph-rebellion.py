@@ -132,8 +132,8 @@ for _ in range(M):
         if info[2] == 0:
             info[1] += 1
 
-lst = [0] * (N+1)
+lst = [0] * (P+1)
 for Pn, info in santa.items():
-    lst[Pn] = str(info[1])
-str = " ".join(lst[1:])
+    lst[Pn] = info[1]
+str = " ".join(map(str, lst[1:]))
 print(str)
