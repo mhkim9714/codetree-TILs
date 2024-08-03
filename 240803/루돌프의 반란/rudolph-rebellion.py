@@ -9,6 +9,7 @@ for _ in range(P):
     Pn,Sr,Sc = map(int,input().split())
     santa[Pn] = [(Sr-1,Sc-1),0,0,0]
     arr[Sr-1][Sc-1] = Pn
+santa = dict(sorted(santa.items()))
 
 MAX_D = 3*(N**2)
 
