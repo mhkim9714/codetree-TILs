@@ -27,17 +27,17 @@ dj = [0, 1, 0, -1]
 
 
 for _ in range(Q):
-    i,d = map(int,input().split())
+    idx,d = map(int,input().split())
 
-    if i not in knight.keys(): # 탈락한 기사는 진행하지 않음
+    if idx not in knight.keys(): # 탈락한 기사는 진행하지 않음
         continue
 
     # (1) 기사 이동
     q = []
     move_start = []
 
-    for ki,kj in knight[i][0]:
-        q.append((ki,kj))
+    for i,j in knight[idx][0]:
+        q.append((i,j))
 
     while q:
         ci,cj = q.pop(0)
@@ -45,8 +45,8 @@ for _ in range(Q):
         if 0<=ni<L and 0<=nj<L and arr[ni][nj]!=-1: # 다음 좌표가 범위내 & 벽X
             move_start.append((ci,cj))
             if arr[ni][nj]>0 and arr[ni][nj]!=arr[ci][cj]:
-                for ki,kj in knight[arr[ni][nj]][0]:
-                    q.append((ki,kj))
+                for i,j in knight[arr[ni][nj]][0]:
+                    q.append((i,j))
         else:
             move_start = []
             break
@@ -54,30 +54,30 @@ for _ in range(Q):
     # (2) 대결 대미지 축적
     if len(move_start) > 0:
         for ci,cj in move_start[::-1]: # reverse
-            kidx = arr[ci][cj]
+            move_knight_idx = arr[ci][cj]
             ni,nj = ci+di[d],cj+dj[d]
 
-            if kidx != i: # 밀려난 기사들에 대해서만 대미지 누적
-                if (ni,nj) in trap:
-                    knight[kidx][1] -= 1
-                    knight[kidx][2] += 1
+            arr[ci][cj], arr[ni][nj] = 0, move_knight_idx
+            knight[move_knight_idx][0].remove((ci, cj))
+            knight[move_knight_idx][0].append((ni, nj))
 
-            arr[ci][cj], arr[ni][nj] = 0, kidx
-            knight[kidx][0].remove((ci,cj))
-            knight[kidx][0].append((ni,nj))
+            if move_knight_idx != idx: # 밀려난 기사들에 대해서만 대미지 누적
+                if (ni,nj) in trap:
+                    knight[move_knight_idx][1] -= 1
+                    knight[move_knight_idx][2] += 1
 
         # knight에서 탈락하는 기사 삭제
-        del_kidx, del_coords = [],[]
-        for kidx, info in knight.items():
+        del_knight_idx, del_knight_coords = [],[]
+        for k_idx, info in knight.items():
             if info[1] <= 0:
-                del_kidx.append(kidx)
-                del_coords.extend(info[0])
-        for kidx in del_kidx:
-            del knight[kidx]
-        for rmi,rmj in del_coords:
+                del_knight_idx.append(k_idx)
+                del_knight_coords.extend(info[0])
+        for k_idx in del_knight_idx:
+            del knight[k_idx]
+        for rmi,rmj in del_knight_coords:
             arr[rmi][rmj] = 0
 
 ans = 0
-for kidx, info in knight.items():
+for k_idx, info in knight.items():
     ans += info[2]
 print(ans)
