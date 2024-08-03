@@ -3,6 +3,7 @@ L,N,Q = map(int,input().split())
 arr = [[0]*L for _ in range(L)]
 knight = dict() # [[(i1,j1),(i2,j2),...], 잔여체력, 누적대미지]
 trap = []
+wall = []
 
 grid = [list(map(int,input().split())) for _ in range(L)]
 for i in range(L):
@@ -11,15 +12,16 @@ for i in range(L):
             trap.append((i,j))
         elif grid[i][j] == 2: # 벽
             arr[i][j] = -1
+            wall.append((i,j))
 
-for kidx in range(1,N+1):
+for k_idx in range(1,N+1):
     r,c,h,w,k = map(int,input().split())
     locs = []
     for i in range(r-1, r-1+h):
         for j in range(c-1, c-1+w):
-            arr[i][j] = kidx
+            arr[i][j] = k_idx
             locs.append((i,j))
-    knight[kidx] = [locs, k, 0]
+    knight[k_idx] = [locs, k, 0]
 
 # 상(0) 우(1) 하(2) 좌(3)
 di = [-1, 0, 1, 0]
@@ -53,18 +55,27 @@ for _ in range(Q):
 
     # (2) 대결 대미지 축적
     if len(move_start) > 0:
-        for ci,cj in move_start[::-1]: # reverse
-            move_knight_idx = arr[ci][cj]
-            ni,nj = ci+di[d],cj+dj[d]
+        narr = [[0]*L for _ in range(L)]
+        for wi,wj in wall:
+            narr[wi][wj] = -1
 
-            arr[ci][cj], arr[ni][nj] = 0, move_knight_idx
-            knight[move_knight_idx][0].remove((ci, cj))
-            knight[move_knight_idx][0].append((ni, nj))
+        for k_idx, info in knight.items():
+            if info[0][0] in move_start: # 해당 knight는 이동이 필요
+                new_info = []
+                for ci,cj in info[0]:
+                    ni, nj = ci+di[d], cj+dj[d]
+                    narr[ni][nj] = arr[ci][cj]
+                    new_info.append((ni,nj))
+                    if k_idx != idx:
+                        if (ni, nj) in trap:
+                            info[1] -= 1
+                            info[2] += 1
+                info[0] = new_info
 
-            if move_knight_idx != idx: # 밀려난 기사들에 대해서만 대미지 누적
-                if (ni,nj) in trap:
-                    knight[move_knight_idx][1] -= 1
-                    knight[move_knight_idx][2] += 1
+            else: # 해당 knight는 이동이 필요 없음
+                for ci,cj in info[0]:
+                    narr[ci][cj] = arr[ci][cj]
+        arr = narr
 
         # knight에서 탈락하는 기사 삭제
         del_knight_idx, del_knight_coords = [],[]
