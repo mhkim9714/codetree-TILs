@@ -4,6 +4,7 @@ arr = [list(map(int, input().split())) for _ in range(n)] # -5:빈칸, -1:돌, 0
 def BFS(i,j,val):
     q = []
     lst = []
+    red_lst = []
 
     q.append((i,j))
     visited[i][j] = 1
@@ -25,8 +26,13 @@ def BFS(i,j,val):
                         max_i,min_j = ni,nj
                 elif arr[ni][nj]==0: # 빨간색 폭탄
                     q.append((ni,nj))
+                    visited[ni][nj] = 1
                     lst.append((ni,nj))
+                    red_lst.append((ni,nj))
                     cnt_red += 1
+
+    for ri,rj in red_lst:
+        visited[ri][rj] = 0
 
     return lst, max_i, min_j, cnt_red
 
