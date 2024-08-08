@@ -27,7 +27,7 @@ def BFS(si,sj,ei=None,ej=None):
                 visited[ni][nj] = visited[ci][cj]+1
                 if ei is not None:
                     if (ni,nj) == (ei,ej):
-                        return visited[ei][ej]-1
+                        return visited
 
     return visited
 
@@ -64,7 +64,7 @@ while passengers:
         break
 
     # 손님의 목적지까지 운행
-    dist_to_destination = BFS(si,sj,ei,ej)
+    dist_to_destination = BFS(si,sj,ei,ej)[ei][ej]-1
     if battery >= dist_to_destination: # 무사히 이동
         evi,evj = ei,ej
         battery += dist_to_destination
