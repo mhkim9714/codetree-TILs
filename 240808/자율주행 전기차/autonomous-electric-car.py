@@ -1,3 +1,5 @@
+INF = 1e+9
+
 n,m,battery = map(int, input().split())
 arr = [list(map(int, input().split())) for _ in range(n)]
 
@@ -13,7 +15,11 @@ for idx in range(m):
 
 def BFS(si,sj,ei=None,ej=None):
     q = []
-    visited = [[-1 * ele for ele in row] for row in arr]
+    visited = [[INF for _ in range(n)] for _ in range(n)]
+    for i in range(n):
+        for j in range(n):
+            if arr[i][j] == 1:
+                visited[i][j] = -1
 
     q.append((si,sj))
     visited[si][sj] = 1
@@ -52,6 +58,10 @@ while passengers:
                 if min_j > info[0][1]:
                     min_d, min_i, min_j = dist, info[0][0], info[0][1]
                     t_idx = idx
+
+    if t_idx == -1: # 손님 딕셔너리에는 사람이 있지만 태울 수 있는 사람이 없는 경우
+        end_flag = 1
+        break
 
     si,sj = passengers[t_idx][0]
     ei,ej = passengers[t_idx][1]
