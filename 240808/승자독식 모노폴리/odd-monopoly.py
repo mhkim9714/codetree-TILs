@@ -24,7 +24,7 @@ for i in range(1,m+1):
     priority[i] = [[x-1 for x in up_priority], [x-1 for x in down_priority], [x-1 for x in left_priority], [x-1 for x in right_priority]]
 
 
-for turn in range(1,k+1):
+for turn in range(1,1000):
     move_direction = dict() # p_idx : 이동할 방향인덱스
 
     for p_idx, [(ci,cj),d] in player.items():
@@ -52,15 +52,15 @@ for turn in range(1,k+1):
         ci,cj = player[p_idx][0]
         ni,nj = ci+di[dir],cj+dj[dir]
         if arr[ni][nj][0] == 0: # 아무도 없다면 독점계약
-            arr[ni][nj] = [p_idx,5]
+            arr[ni][nj] = [p_idx,k+1]
             player[p_idx] = [(ni,nj),dir]
         elif arr[ni][nj][0] == p_idx: # 내 땅이었다면 계약 기간만 연장
-            arr[ni][nj] = [p_idx,5]
+            arr[ni][nj] = [p_idx,k+1]
             player[p_idx] = [(ni,nj),dir]
         else: # 다른 플레이어와 같은 땅으로 이동했다면 플레이어 삭제 진행
             if p_idx < arr[ni][nj][0]: # 나 생존
                 del player[arr[ni][nj][0]]
-                arr[ni][nj] = [p_idx,5]
+                arr[ni][nj] = [p_idx,k+1]
                 player[p_idx] = [(ni,nj),dir]
             else: # 나 삭제
                 del player[p_idx]
