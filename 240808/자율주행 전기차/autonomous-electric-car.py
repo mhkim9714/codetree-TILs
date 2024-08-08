@@ -28,7 +28,7 @@ def BFS(si,sj,ei=None,ej=None):
         ci,cj = q.pop(0)
         for di,dj in ((-1,0),(0,1),(1,0),(0,-1)):
             ni,nj = ci+di,cj+dj
-            if 0<=ni<n and 0<=nj<n and visited[ni][nj]==0: # 격자내 & 미방문
+            if 0<=ni<n and 0<=nj<n and visited[ni][nj]==INF: # 격자내 & 미방문
                 q.append((ni,nj))
                 visited[ni][nj] = visited[ci][cj]+1
                 if ei is not None:
