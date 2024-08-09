@@ -32,7 +32,8 @@ def move(arr):
         arr[i][j][1] = d
 
         location[arr[i][j][0]] = (ni,nj)
-        location[arr[ni][nj][0]] = (i,j)
+        if arr[ni][nj][0] > 0:
+            location[arr[ni][nj][0]] = (i,j)
 
         temp = arr[i][j]
         arr[i][j] = arr[ni][nj]
@@ -75,7 +76,7 @@ while q:
     else:
         for nTi,nTj in next_Tag:
             new_score = base_score + arr[nTi][nTj][0]
-            new_arr = [x for x in arr]
+            new_arr = [[col[:] for col in row] for row in arr]
             new_arr[Ti][Tj] = [0,-1]
             new_arr[nTi][nTj][0] = -1
             q.append((new_score, new_arr))
