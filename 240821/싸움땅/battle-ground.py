@@ -55,16 +55,17 @@ for _ in range(k):
             player[win_idx][4] += (player[win_idx][2]+player[win_idx][3]-player[lose_idx][2]-player[lose_idx][3])
 
             # 2-2-2
-            arr[ni][nj].append(player[lose_idx][3])
-            player[lose_idx][3] = 0
+            if player[lose_idx][3] > 0:
+                arr[ni][nj].append(player[lose_idx][3])
+                player[lose_idx][3] = 0
 
             lose_ci, lose_cj, lose_d = player[lose_idx][0][0], player[lose_idx][0][1], player[lose_idx][1]
             for dd in range(4):
-                lose_d = (lose_d+dd)%4
-                lose_ni, lose_nj = lose_ci+di[lose_d], lose_cj+dj[lose_d]
+                lose_nd = (lose_d+dd)%4
+                lose_ni, lose_nj = lose_ci+di[lose_nd], lose_cj+dj[lose_nd]
                 if 0<=lose_ni<n and 0<=lose_nj<n and p_loc[lose_ni][lose_nj]==0:
                     player[lose_idx][0] = (lose_ni, lose_nj)
-                    player[lose_idx][1] = lose_d
+                    player[lose_idx][1] = lose_nd
                     p_loc[lose_ni][lose_nj] = lose_idx
 
                     arr[lose_ni][lose_nj].append(player[lose_idx][3])
