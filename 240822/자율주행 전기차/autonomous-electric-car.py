@@ -7,7 +7,7 @@ for idx in range(1,m+1):
     x_s,y_s,x_e,y_e = map(int, input().split())
     people[idx] = [(x_s-1,y_s-1),(x_e-1,y_e-1)]
 
-INF = 3*n*n
+INF = 1e+6
 
 def BFS(si,sj,ei,ej):
     q = []
