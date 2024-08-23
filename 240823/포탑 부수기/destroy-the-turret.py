@@ -53,7 +53,7 @@ for turn in range(1,K+1):
 
     # 공격
     q = []
-    visited = [[-2 for _ in range(N)] for _ in range(M)]
+    visited = [[-2 for _ in range(M)] for _ in range(N)]
 
     q.append((attk_i,attk_j))
     visited[attk_i][attk_j] = -1
@@ -62,7 +62,7 @@ for turn in range(1,K+1):
     while q:
         ci,cj = q.pop(0)
         for d in range(4):
-            ni,nj = (ci+di[d]+4)%4, (cj+dj[d]+4)%4
+            ni,nj = (ci+di[d]+N)%N, (cj+dj[d]+M)%M
             if visited[ni][nj]==-2 and len(arr[ni][nj])>0:
                 q.append((ni,nj))
                 visited[ni][nj] = (d+2)%4
@@ -71,7 +71,7 @@ for turn in range(1,K+1):
                     pi,pj = tgt_i,tgt_j
                     involved = [(pi,pj)]
                     while True:
-                        pi,pj = (pi+di[visited[pi][pj]]+4)%4, (pj+dj[visited[pi][pj]]+4)%4
+                        pi,pj = (pi+di[visited[pi][pj]]+N)%N, (pj+dj[visited[pi][pj]]+M)%M
                         involved.append((pi,pj))
                         if visited[pi][pj] == -1:
                             break
@@ -98,7 +98,7 @@ for turn in range(1,K+1):
     if laser_flag == 0: # 포탄 공격
         involved = [(attk_i,attk_j),(tgt_i,tgt_j)]
         for ddi,ddj in ((-1,0),(1,0),(0,-1),(0,1),(-1,-1),(-1,1),(1,-1),(1,1)):
-            involved.append(((tgt_i+di[ddi]+4)%4, (tgt_j+dj[ddj]+4)%4))
+            involved.append(((tgt_i+di[ddi]+N)%N, (tgt_j+dj[ddj]+M)%M))
 
         for i, j in involved:
             if len(arr[i][j]) > 0:
