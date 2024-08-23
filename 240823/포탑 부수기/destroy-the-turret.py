@@ -126,6 +126,8 @@ for turn in range(1,K+1):
                 cnt_alive += 1
                 if arr[i][j][2]!=1:
                     arr[i][j][0] += 1
+                else:
+                    arr[i][j][2] = 0
     if cnt_alive == 1:
         break
 
