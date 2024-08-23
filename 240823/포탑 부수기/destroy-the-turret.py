@@ -98,7 +98,7 @@ for turn in range(1,K+1):
     if laser_flag == 0: # 포탄 공격
         involved = [(attk_i,attk_j),(tgt_i,tgt_j)]
         for ddi,ddj in ((-1,0),(1,0),(0,-1),(0,1),(-1,-1),(-1,1),(1,-1),(1,1)):
-            involved.append(((tgt_i+di[ddi]+N)%N, (tgt_j+dj[ddj]+M)%M))
+            involved.append(((tgt_i+ddi+N)%N, (tgt_j+ddj+M)%M))
 
         for i, j in involved:
             if len(arr[i][j]) > 0:
