@@ -45,7 +45,7 @@ while q:
     next_tag = []
     while True:
         if 0<=nti<4 and 0<=ntj<4:
-            if arr[nti][ntj] != 0:
+            if a[nti][ntj] != 0:
                 next_tag.append((nti,ntj))
             nti, ntj = nti+di[td], ntj+dj[td]
         else:
@@ -78,13 +78,14 @@ while q:
     # 술래 이동 후 q에 append
     a[ti][tj] = 0
     for nti,ntj in next_tag:
-        np = copy.deepcopy(p)
-        na = [x[:] for x in a]
-        ntd = np[na[nti][ntj]][1]
-        del np[na[nti][ntj]]
-        ns = s + na[nti][ntj]
-        na[ntj][ntj] = -1
+        if a[nti][ntj] != 0:
+            np = copy.deepcopy(p)
+            na = [x[:] for x in a]
+            ntd = np[na[nti][ntj]][1]
+            del np[na[nti][ntj]]
+            ns = s + na[nti][ntj]
+            na[nti][ntj] = -1
 
-        q.append((np, na, nti, ntj, ntd, ns))
+            q.append((np, na, nti, ntj, ntd, ns))
 
 print(max(scores))
