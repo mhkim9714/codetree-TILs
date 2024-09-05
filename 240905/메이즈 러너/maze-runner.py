@@ -43,7 +43,7 @@ for _ in range(K):
     # 정사각형 찾기
     sq_i, sq_j, sq_d = N,N,N
     for idx, coord in player.items():
-        n_sq_d = distance(coord[0],coord[1],exi,exj)
+        n_sq_d = max(abs(coord[0]-exi), abs(coord[1]-exj))
         n_sq_i = max(max(coord[0],exi)-n_sq_d, 0)
         n_sq_j = max(max(coord[1],exj)-n_sq_d, 0)
 
