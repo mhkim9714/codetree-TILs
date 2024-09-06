@@ -98,12 +98,13 @@ for turn in range(k):
     for v in range(3):
         vi,vj = Ti+v*di[Td], Tj+v*dj[Td]
 
-        if (vi,vj) not in tree:
-            if len(arr[vi][vj]) > 0:
-                score += (turn+1) * len(arr[vi][vj])
-                for idx in arr[vi][vj]:
-                    del player[idx]
-                arr[vi][vj] = []
+        if 0<=vi<n and 0<=vj<n:
+            if (vi,vj) not in tree:
+                if len(arr[vi][vj]) > 0:
+                    score += (turn+1) * len(arr[vi][vj])
+                    for idx in arr[vi][vj]:
+                        del player[idx]
+                    arr[vi][vj] = []
 
     # 종료조건
     if len(player) == 0:
