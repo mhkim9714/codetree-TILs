@@ -53,20 +53,20 @@ for _ in range(t):
             i2,j2 = i1+di[d2], j1+dj[d2]
             if not (0<=i2<4 and 0<=j2<4):
                 continue
-            if (i2,j2) == (i1,j1):
-                continue
             eat2 = len(arr[i2][j2])
 
             for d3 in (0,2,4,6):
                 i3,j3 = i2+di[d3], j2+dj[d3]
                 if not (0<=i3<4 and 0<=j3<4):
                     continue
-                if (i3,j3) in ((i1,j1), (i2,j2)):
-                    continue
                 eat3 = len(arr[i3][j3])
 
-                if max_eat < (eat1+eat2+eat3):
-                    max_eat = eat1+eat2+eat3
+                eat_lst = list(set([(i1,j1),(i2,j2),(i3,j3)]))
+                cur_eat = 0
+                for i,j in eat_lst:
+                    cur_eat += len(arr[i][j])
+                if max_eat < cur_eat:
+                    max_eat = cur_eat
                     move_lst = [d1,d2,d3]
 
     final_i1, final_j1 = Pi+di[move_lst[0]], Pj+dj[move_lst[0]]
