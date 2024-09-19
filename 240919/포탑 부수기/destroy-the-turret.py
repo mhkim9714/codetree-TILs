@@ -68,7 +68,7 @@ for round in range(1,K+1):
                             if tgt_i+tgt_j > i+j:
                                 tgt_p, tgt_t, tgt_i, tgt_j = arr[i][j][0], arr[i][j][1], i, j
                             elif tgt_i+tgt_j == i+j:
-                                if tgt_j < j:
+                                if tgt_j > j:
                                     tgt_p, tgt_t, tgt_i, tgt_j = arr[i][j][0], arr[i][j][1], i, j
 
     bombed = BFS(attk_i, attk_j, tgt_i, tgt_j)
