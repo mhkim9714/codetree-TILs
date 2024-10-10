@@ -56,8 +56,7 @@ for _ in range(k):
                     win_idx, lose_idx = idx, other_idx
                 else:
                     win_idx, lose_idx = other_idx, idx
-
-            player[win_idx][4] = (player[win_idx][2]+player[win_idx][3]) - (player[lose_idx][2]+player[lose_idx][3])
+            player[win_idx][4] += ((player[win_idx][2]+player[win_idx][3]) - (player[lose_idx][2]+player[lose_idx][3]))
 
             # 2-2-2 (lose 처리)
             if len(gun[ci][cj])==0 or player[lose_idx][3]!=0:
