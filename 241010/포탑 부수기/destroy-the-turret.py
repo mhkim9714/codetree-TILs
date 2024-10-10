@@ -97,7 +97,7 @@ for t in range(1,K+1):
 
         for di,dj in [(-1,0),(-1,1),(0,1),(1,1),(1,0),(1,-1),(0,-1),(-1,-1)]:
             ni,nj = (tgt_i+di)%N, (tgt_j+dj)%M
-            if arr[ni][nj][0] > 0:
+            if arr[ni][nj][0] > 0 and (ni,nj) != (attk_i,attk_j):
                 arr[ni][nj][0] = max(arr[ni][nj][0]-arr[attk_i][attk_j][0]//2, 0)
                 affected.append((ni,nj))
 
