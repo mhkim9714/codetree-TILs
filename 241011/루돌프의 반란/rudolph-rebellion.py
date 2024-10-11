@@ -1,5 +1,3 @@
-import copy
-
 # 루돌프 방향
 # 상0, 상우1, 우2, 하우3, 하4, 하좌5, 좌6, 상좌7
 Rdi = [-1, -1, 0, 1, 1, 1, 0, -1]
@@ -69,13 +67,15 @@ for _ in range(M):
                 q = []
                 i, j = new_Pi, new_Pj
                 while True:
-                    q.append((i, j))
-                    i, j = i+Rdi[final_Rd], j+Rdj[final_Rd]
-                    if 0<=i<N and 0<=j<N:
-                        if len(santa_arr[i][j]) == 0:
+                    ni, nj = i+Rdi[final_Rd], j+Rdj[final_Rd]
+                    if 0<=ni<N and 0<=nj<N:
+                        if len(santa_arr[ni][nj]) == 0:
                             break
                     else:
                         break
+                    q.append((i, j))
+                    i, j = ni, nj
+
                 q_reversed = q[::-1]
 
                 for i,j in q_reversed:
@@ -135,13 +135,14 @@ for _ in range(M):
                     q = []
                     i, j = new_Pi, new_Pj
                     while True:
-                        q.append((i,j))
-                        i,j = i+Pdi[(final_Pd+2)%4], j+Pdj[(final_Pd+2)%4]
-                        if 0<=i<N and 0<=j<N:
-                            if len(santa_arr[i][j]) == 0:
+                        ni,nj = i+Pdi[(final_Pd+2)%4], j+Pdj[(final_Pd+2)%4]
+                        if 0<=ni<N and 0<=nj<N:
+                            if len(santa_arr[ni][nj]) == 0:
                                 break
                         else:
                             break
+                        q.append((ni, nj))
+                        i,j = ni,nj
                     q_reversed = q[::-1]
 
                     for i,j in q_reversed:
