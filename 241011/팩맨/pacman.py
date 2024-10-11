@@ -8,29 +8,34 @@ m,t = map(int, input().split())
 pi,pj = map(int, input().split())
 pi,pj = pi-1,pj-1
 
-monster = []
+monster = [[[0 for _ in range(8)] for _ in range(4)] for _ in range(4)] # [각 방향별 갯수] len=8
 dead = [[0 for _ in range(4)] for _ in range(4)]
 for _ in range(m):
     r,c,d = map(int, input().split())
-    monster.append([r-1,c-1,d-1])
+    monster[r-1][c-1][d-1] += 1
+
 
 for _ in range(t): # 10^1
     # 1) 몬스터 복제 시도
     egg = copy.deepcopy(monster)
 
     # 2) 몬스터 이동
-    monster_arr = [[[] for _ in range(4)] for _ in range(4)]
-    for idx in range(len(monster)): # 10^7
-        ci,cj,cd = monster[idx]
-        for dd in range(8): # 10^7
-            nd = (cd+dd)%8
-            ni,nj = ci+di[nd], cj+dj[nd]
-            if 0<=ni<4 and 0<=nj<4 and (ni,nj)!=(pi,pj) and dead[ni][nj]==0:
-                monster[idx] = [ni,nj,nd]
-                monster_arr[ni][nj].append(idx)
-                break
-        else:
-            monster_arr[ci][cj].append(idx)
+    new_monster = [[[0 for _ in range(8)] for _ in range(4)] for _ in range(4)]
+    for i in range(4):
+        for j in range(4):
+            for d in range(8):
+                cnt = monster[i][j][d]
+                if cnt == 0:
+                    continue
+                for dd in range(8): # 10^4
+                    nd = (d+dd) % 8
+                    ni,nj = i+di[nd], j+dj[nd]
+                    if 0<=ni<4 and 0<=nj<4 and (ni,nj)!=(pi,pj) and dead[ni][nj]==0:
+                        new_monster[ni][nj][nd] += cnt
+                        break
+                else:
+                    new_monster[i][j][d] += cnt
+    monster = new_monster
 
     # 3) 팩맨 이동
     max_eat = -1
@@ -51,22 +56,17 @@ for _ in range(t): # 10^1
                     continue
 
                 eat = 0
-                tmp_route = {(pi1,pj1), (pi2,pj2), (pi3,pj3)}
-                for i,j in tmp_route:
-                    eat += len(monster_arr[i][j])
+                for i,j in {(pi1,pj1), (pi2,pj2), (pi3,pj3)}:
+                    eat += sum(monster[i][j])
                 if max_eat < eat:
                     max_eat = eat
                     route = [(pi1,pj1), (pi2,pj2), (pi3,pj3)]
     pi,pj = route[-1]
 
-    rmv_list = []
     for i,j in set(route):
-        if len(monster_arr[i][j]) > 0:
+        if sum(monster[i][j]) > 0:
             dead[i][j] = 3
-        for idx in monster_arr[i][j]:
-            rmv_list.append(monster[idx])
-    for item in rmv_list:
-        monster.remove(item)
+            monster[i][j] = [0,0,0,0,0,0,0,0]
 
     # 4) 몬스터 시체 소멸
     for i in range(4):
@@ -75,6 +75,14 @@ for _ in range(t): # 10^1
                 dead[i][j] -= 1
 
     # 5) 몬스터 복제 완성
-    monster = monster + egg
+    for i in range(4):
+        for j in range(4):
+            for d in range(8):
+                monster[i][j][d] += egg[i][j][d]
 
-print(len(monster))
+ans = 0
+for i in range(4):
+    for j in range(4):
+        for d in range(8):
+            ans += monster[i][j][d]
+print(ans)
