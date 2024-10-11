@@ -60,7 +60,7 @@ for _ in range(t): # 10^1
     pi,pj = route[-1]
 
     rmv_list = []
-    for i,j in route:
+    for i,j in set(route):
         if len(monster_arr[i][j]) > 0:
             dead[i][j] = 3
         for idx in monster_arr[i][j]:
