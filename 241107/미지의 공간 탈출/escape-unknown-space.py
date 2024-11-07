@@ -220,10 +220,12 @@ while True:
         else:  # 북
             r -= step
 
-        nidx = bottom_idx[r][c]
-        if bottom[r][c] != 0:  # 확산 되지 않고 멈춤
+        if not (0<=r<N and 0<=c<N):  # 격자 밖 -> 확산 X
             events[e][3] = 1
-        else:  # 확산 일어남
+        elif bottom[r][c] != 0:  # 격자 내 & 빈공간 X -> 확산 X
+            events[e][3] = 1
+        else:  # 격자 내 & 빈공간 O -> 확산 O
+            nidx = bottom_idx[r][c]
             visited[nidx] = INF
 
     # 타임 머신 이동 (BFS 1회)
