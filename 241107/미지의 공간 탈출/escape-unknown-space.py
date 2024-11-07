@@ -202,7 +202,7 @@ visited[s_idx] = 0
 while True:
     time += 1
 
-    # 해당 턴에 시간 이상 현상 확산
+    # 해당 턴에 시간 이상 현상 확산 (빈공간'0'으로만 확산)
     for e in range(F):
         coord, d, v, a = events[e]
         r, c = coord
@@ -221,7 +221,7 @@ while True:
             r -= step
 
         nidx = bottom_idx[r][c]
-        if visited[nidx] == INF:  # 확산 되지 않고 멈춤
+        if bottom[r][c] != 0:  # 확산 되지 않고 멈춤
             events[e][3] = 1
         else:  # 확산 일어남
             visited[nidx] = INF
