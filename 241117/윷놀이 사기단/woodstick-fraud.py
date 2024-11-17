@@ -1,7 +1,7 @@
 # 그래프 생성
 node = [idx for idx in range(33)]  # 0~32
 value = [0,2,4,6,8,
-         10,12,13,16,18,
+         10,12,14,16,18,
          20,22,24,26,28,
          30,32,34,36,38,
          40,13,16,19,22,
@@ -33,15 +33,19 @@ def backtracking(cnt, score, pos):  # cnt번 이동한 결과물이 score/pos
         # 말 이동
         mv = move_cnt[cnt]
         c_pos = pos[h]
+
         if c_pos in special_node:
             n_pos = special_edge[special_node.index(c_pos)]
             mv -= 1
         else:
             n_pos = pos[h]
+
         for _ in range(mv):
             n_pos = edge[n_pos]
+            if n_pos == 32:
+                break
 
-        if n_pos!=32 and pos.count(n_pos)>0:  # 도달하는 위치에 다른 말이 이미 있으면 불가능
+        if n_pos != 32 and n_pos in pos:  # 도달하는 위치에 다른 말이 이미 있으면 불가능
             continue
 
         new_pos = pos[:]
