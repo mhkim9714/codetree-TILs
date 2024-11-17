@@ -41,7 +41,7 @@ def backtracking(cnt, score, pos):  # cnt번 이동한 결과물이 score/pos
         for _ in range(mv):
             n_pos = edge[n_pos]
 
-        if pos.count(n_pos) > 0:  # 도달하는 위치에 다른 말이 이미 있으면 불가능
+        if n_pos!=32 and pos.count(n_pos)>0:  # 도달하는 위치에 다른 말이 이미 있으면 불가능
             continue
 
         new_pos = pos[:]
