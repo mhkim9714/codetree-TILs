@@ -77,11 +77,14 @@ def BFS(ri, rj, bi, bj):  # cnt번째 초기 입력으로 주어지는 ri,rj,bi,
                     final_nri, final_nrj = red_coords[-1]
                     final_nbi, final_nbj = blue_coords[-1]
                 else:  # 구슬끼리 충돌이 일어난 경우
-                    min_len = min(len(red_coords), len(blue_coords))
-                    red_coords = red_coords[:min_len]
-                    blue_coords = blue_coords[:min_len]
-                    final_nri, final_nrj = red_coords[-1]
-                    final_nbi, final_nbj = blue_coords[-1]
+                    red_idx = len(red_coords) - 1
+                    blue_idx = len(blue_coords) - 1
+                    if red_idx < blue_idx:
+                        final_nri, final_nrj = red_coords[-1]
+                        final_nbi, final_nbj = blue_coords[blue_idx-1]
+                    else:
+                        final_nri, final_nrj = red_coords[red_idx-1]
+                        final_nbi, final_nbj = blue_coords[-1]
 
             # 결과1: 빨out, 파out -> 실패
             # 결과2: 빨in, 파out -> 실패
