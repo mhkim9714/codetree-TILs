@@ -100,6 +100,8 @@ def BFS(ri, rj, bi, bj):  # cnt번째 초기 입력으로 주어지는 ri,rj,bi,
                     q.append((cnt+1, final_nri, final_nrj, final_nbi, final_nbj))
                     visited.append((final_nri, final_nrj, final_nbi, final_nbj))
 
+    return -1
+
 
 ans = BFS(ri,rj,bi,bj)
 print(ans)
