@@ -4,7 +4,6 @@ def distance(r1, c1, r2, c2):
 
 def interaction(s_idx, si, sj, di, dj, arr):  # 10^2
     global santa
-    del_idx = []
 
     candidates = []
     ci, cj = si, sj
@@ -25,10 +24,10 @@ def interaction(s_idx, si, sj, di, dj, arr):  # 10^2
         if 0 <= ni < N and 0 <= nj < N:
             santa[idx][0] = (ni, nj)
         else:
-            del_idx.append(idx)
+            ans[idx] = santa[idx][2]
+            del santa[idx]
 
     santa[s_idx][0] = (si,sj)
-    return del_idx
 
 
 N, M, P, C, D = map(int, input().split())
@@ -92,10 +91,7 @@ for _ in range(M):  # 10^3
             if arr[ntsi][ntsj] == 0:
                 santa[ts][0] = (ntsi, ntsj)
             else:  # 상호작용
-                del_interaction_idx = interaction(ts, ntsi, ntsj, rdi[rd], rdj[rd], arr)  # 10^2
-                for idx in del_interaction_idx:
-                    ans[idx] = santa[idx][2]
-                    del santa[idx]
+                interaction(ts, ntsi, ntsj, rdi[rd], rdj[rd], arr)  # 10^2
 
         else:
             ans[ts] = santa[ts][2]
@@ -106,8 +102,11 @@ for _ in range(M):  # 10^3
         break
 
     # 2. 산타 움직임 10^3 -> 총 10^6
-    del_idx = []
-    for idx, info in santa.items():  # 10^1
+    for idx in list(santa.keys()):  # 10^1
+        if idx not in santa.keys():
+            continue
+        info = santa[idx]
+
         if info[1] != 0:
             continue
 
@@ -148,19 +147,16 @@ for _ in range(M):  # 10^3
                 if arr[nsi][nsj] == 0:
                     info[0] = (nsi, nsj)
                 else:  # 상호작용
-                    del_interaction_idx = interaction(idx, nsi, nsj, sdi[sd], sdj[sd], arr)  # 10^2
-                    del_idx.extend(del_interaction_idx)
+                    interaction(idx, nsi, nsj, sdi[sd], sdj[sd], arr)  # 10^2
 
             else:
-                del_idx.append(idx)
+                ans[idx] = santa[idx][2]
+                del santa[idx]
 
-        # 종료 체크
-        if len(santa) == len(del_idx):
+        if len(santa) == 0:
             break
 
-    for idx in del_idx:
-        ans[idx] = santa[idx][2]
-        del santa[idx]
+    # 종료 체크
     if len(santa) == 0:
         break
 
