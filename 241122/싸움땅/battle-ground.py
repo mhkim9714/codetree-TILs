@@ -83,7 +83,7 @@ for _ in range(k):
             if len(gun_arr[lni][lnj]) != 0:  # 총 있는 경우
                 max_gun = max(gun_arr[lni][lnj])
                 gun_arr[lni][lnj].remove(max_gun)
-                info[3] = max_gun
+                lose_info[3] = max_gun
 
             # 2-2-3. 이긴 플레이어 처리
             if len(gun_arr[ni][nj]) != 0:  # 총 있는 경우
