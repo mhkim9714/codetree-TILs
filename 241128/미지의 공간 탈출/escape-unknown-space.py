@@ -180,8 +180,11 @@ while True:
         if time % info[2] == 0:
             times = time // info[2]
             next_event_i, next_event_j = info[0][0]+times*di[info[1]], info[0][1]+times*dj[info[1]]
-            if floor[next_event_i][next_event_j] == 0:
-                visited_idx[floor_idx[next_event_i][next_event_j]] = -2
+            if 0<=next_event_i<N and 0<=next_event_j<N:
+                if floor[next_event_i][next_event_j] == 0:
+                    visited_idx[floor_idx[next_event_i][next_event_j]] = -2
+                else:
+                    del_e_idx.append(e_idx)
             else:
                 del_e_idx.append(e_idx)
     for e_idx in del_e_idx:
