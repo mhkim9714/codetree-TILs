@@ -1,48 +1,50 @@
+import heapq
+
+INF = 1e10
+MAX_ITEM = 30001
+
 Q = int(input())
 command = [list(map(int, input().split())) for _ in range(Q)]
-INF = 1e10
 
+pq = []
+is_made = [False] * MAX_ITEM
+is_cancelled = [False] * MAX_ITEM
+class Packages:
+    def __init__(self, id, revenue, dest, profit):
+        self.id = id
+        self.revenue = revenue
+        self.dest = dest
+        self.profit = profit
 
-def get_smallest_node():
-    min_dist = INF+1
-    idx = -1
-    for i in range(n):
-        if distance[i] < min_dist and not visited[i]:
-            min_dist = distance[i]
-            idx = i
-    return idx
+    def __lt__(self, other):  # less than을 정의하는 기준 -> 우선적으로 선택할 내용
+        if self.profit == other.profit:
+            return self.id < other.id  # 우리는 id가 더 작은걸 우선적으로 생각
+        return self.profit > other.profit  # 우리는 profit이 더 큰걸 우선적으로 생각
 
 
 def dijkstra(start):
-    '''
-    모든 노드에 대해 반복,
-        1. 방문 처리 되지 않은 노드 중 -> 입력된 거리가 가장 짧은 노드 선택
-        2. 해당 노드를 방문 처리
-        3. 해당 노드를 기준으로 연결된 노드에 대해 거리를 구했을 때, 기존에 입력된 값보다 작으면 거리를 갱신
-    '''
-    global distance, visited
+    global distance
+    q = []
+    heapq.heappush(q, (0, start))
     distance[start] = 0
-    visited[start] = True
 
-    for end, weight in graph[start].items():
-        distance[end] = weight
+    while q:
+        dist, now = heapq.heappop(q)
 
-    for _ in range(n):
-        now = get_smallest_node()
-        visited[now] = True
+        if distance[now] < dist:
+            continue
+
         for end, weight in graph[now].items():
-            if distance[now] + weight < distance[end]:
-                distance[end] = distance[now] + weight
+            if dist + weight < distance[end]:
+                distance[end] = dist + weight
+                heapq.heappush(q, (dist+weight, end))
 
 
-trip = dict()
 for cmd in command:
     if cmd[0] == 100:  # 코드트리 랜드 건설
         n, m = cmd[1], cmd[2]
-
         graph = [dict() for _ in range(n)]  # 각 시작노드당, {도착노드:간선가중치, ...}
         distance = [INF] * n
-        visited = [False] * n
 
         for cnt in range((len(cmd)-3)//3):
             i = 3 * (cnt+1)
@@ -63,37 +65,39 @@ for cmd in command:
         dijkstra(0)
 
     elif cmd[0] == 200:  # 여행 상품 생성
-        idx, revenue, dest = cmd[1], cmd[2], cmd[3]
-        trip[idx] = [dest, revenue, distance[dest]]  # [도착지, revenue, cost]
+        heapq.heappush(pq, Packages(cmd[1], cmd[2], cmd[3], cmd[2]-distance[cmd[3]]))  # id, revenue, dest, profit
+        is_made[cmd[1]] = True
 
     elif cmd[0] == 300:  # 여행 상품 취소
-        if cmd[1] in trip.keys():
-            del trip[cmd[1]]
+        if is_made[cmd[1]]:
+            is_cancelled[cmd[1]] = True
 
     elif cmd[0] == 400:  # 최적의 여행 상품 판매
-        max_profit, min_idx = 0, INF
-        for idx, info in trip.items():
-            profit = info[1] - info[2]
-            if profit < 0:
+        while pq:
+            p = pq[0]
+            if p.profit < 0:
+                print(-1)
+                break
+
+            heapq.heappop(pq)
+            if is_cancelled[p.id]:
                 continue
-
-            if max_profit < profit:
-                max_profit, min_idx = profit, idx
-            elif max_profit == profit:
-                if min_idx > idx:
-                    max_profit, min_idx = profit, idx
-
-        if min_idx == INF:
-            print(-1)
+            else:
+                print(p.id)
+                break
         else:
-            print(min_idx)
-            del trip[min_idx]
+            print(-1)
 
-    else:  # 여행 상품의 출발지 변경
+    else:  # 여행 상품의 출발지 변경 (10^7)
         distance = [INF] * n
-        visited = [False] * n
         dijkstra(cmd[1])
 
-        for idx, info in trip.items():
-            info[2] = distance[info[0]]
+        temp = []
+        while pq:
+            temp.append(heapq.heappop(pq))
+
+        pq = []
+        for p in temp:
+            heapq.heappush(pq, Packages(p.id, p.revenue, p.dest, p.revenue-distance[p.dest]))  # id, revenue, dest, profit
+
 
