@@ -1,3 +1,30 @@
+# 1->2 / 2->2or3 / 3->4or1 / 4->4or1
+def dfs(ci, cj, visited, idx):
+    for di, dj in [(-1,0), (0,1), (1,0), (0,-1)]:
+        ni, nj = ci+di, cj+dj
+        if 0<=ni<n and 0<=nj<n:
+            if tmp[ci][cj]==1 and tmp[ni][nj]==2:
+                visited.append((ni, nj))
+                arr[ni][nj] = [idx, tmp[ni][nj]]
+                return dfs(ni, nj, visited, idx)
+            elif tmp[ci][cj]==2 and tmp[ni][nj] in [2,3] and (ni,nj) not in visited:
+                visited.append((ni, nj))
+                arr[ni][nj] = [idx, tmp[ni][nj]]
+                return dfs(ni, nj, visited, idx)
+            elif tmp[ci][cj]==3 and tmp[ni][nj]==4:
+                visited.append((ni, nj))
+                arr[ni][nj] = [idx, tmp[ni][nj]]
+                return dfs(ni, nj, visited, idx)
+            elif tmp[ci][cj]==3 and tmp[ni][nj]==1:
+                return visited
+            elif tmp[ci][cj]==4 and tmp[ni][nj]==4 and (ni,nj) not in visited:
+                visited.append((ni, nj))
+                arr[ni][nj] = [idx, tmp[ni][nj]]
+                return dfs(ni, nj, visited, idx)
+            elif tmp[ci][cj]==4 and tmp[ni][nj]==1:
+                return visited
+
+
 n, m, k = map(int, input().split())
 tmp = [list(map(int, input().split())) for _ in range(n)]
 
@@ -7,55 +34,9 @@ idx = 1
 for i in range(n):
     for j in range(n):
         if tmp[i][j] == 1:
-            ci, cj = i, j
-            coord = [(ci, cj)]
-            arr[ci][cj] = [idx, tmp[ci][cj]]
-            flag = 0
-            while True:
-                if flag == 1:
-                    break
-                if tmp[ci][cj] == 1:  # 다음 2
-                    for di, dj in [(-1,0), (0,1), (1,0), (0,-1)]:
-                        ni, nj = ci+di, cj+dj
-                        if 0<=ni<n and 0<=nj<n and tmp[ni][nj]==2:
-                            ci, cj = ni, nj
-                            coord.append((ni, nj))
-                            arr[ni][nj] = [idx, tmp[ni][nj]]
-                            break
-                elif tmp[ci][cj] == 2:  # 다음 2 or 3
-                    for di, dj in [(-1,0), (0,1), (1,0), (0,-1)]:
-                        ni, nj = ci+di, cj+dj
-                        if 0<=ni<n and 0<=nj<n and tmp[ni][nj] in [2,3] and (ni,nj) not in coord:
-                            ci, cj = ni, nj
-                            coord.append((ni, nj))
-                            arr[ni][nj] = [idx, tmp[ni][nj]]
-                            break
-                elif tmp[ci][cj] == 3:  # 다음 4 or 1->break while
-                    for di, dj in [(-1,0), (0,1), (1,0), (0,-1)]:
-                        ni, nj = ci+di, cj+dj
-                        if 0<=ni<n and 0<=nj<n:
-                            if tmp[ni][nj] == 4:
-                                ci, cj = ni, nj
-                                coord.append((ni, nj))
-                                arr[ni][nj] = [idx, tmp[ni][nj]]
-                                break
-                            elif tmp[ni][nj] == 1:
-                                flag = 1
-                                break
-                elif tmp[ci][cj] == 4:  # 다음 4 or 1->break while
-                    for di, dj in [(-1,0), (0,1), (1,0), (0,-1)]:
-                        ni, nj = ci+di, cj+dj
-                        if 0<=ni<n and 0<=nj<n:
-                            if tmp[ni][nj] == 4 and (ni,nj) not in coord:
-                                ci, cj = ni, nj
-                                coord.append((ni, nj))
-                                arr[ni][nj] = [idx, tmp[ni][nj]]
-                                break
-                            elif tmp[ni][nj] == 1:
-                                flag = 1
-                                break
-
-            team[idx] = coord
+            visited = [(i, j)]
+            arr[i][j] = [idx, 1]
+            team[idx] = dfs(i, j, visited, idx)
             idx += 1
 
 throw_i = [x for x in range(n)] + [n-1 for _ in range(n)] + [x for x in range(n-1, -1, -1)] + [0 for _ in range(n)]
