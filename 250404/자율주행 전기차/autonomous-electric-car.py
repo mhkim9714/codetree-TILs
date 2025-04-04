@@ -76,10 +76,14 @@ while True:  # O(400)
                     exit_flag = 1
                     break
 
-    if visited[passenger[pass_idx][1][0]][passenger[pass_idx][1][1]] > battery:
+    if exit_flag == 0:
         print(-1)
         break
     else:
-        car_i, car_j, battery = passenger[pass_idx][1][0], passenger[pass_idx][1][1], battery+visited[passenger[pass_idx][1][0]][passenger[pass_idx][1][1]]
-        del passenger[pass_idx]
+        if visited[passenger[pass_idx][1][0]][passenger[pass_idx][1][1]] > battery:
+            print(-1)
+            break
+        else:
+            car_i, car_j, battery = passenger[pass_idx][1][0], passenger[pass_idx][1][1], battery+visited[passenger[pass_idx][1][0]][passenger[pass_idx][1][1]]
+            del passenger[pass_idx]
 
